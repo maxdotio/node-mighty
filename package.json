@@ -1,0 +1,29 @@
+{
+  "name": "node-mighty",
+  "version": "1.0.0",
+  "description": "Client for Mighty Inference Server",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxdotio/node-mighty.git"
+  },
+  "keywords": [
+    "nlp",
+    "transformers",
+    "onnx",
+    "bert"
+  ],
+  "author": "Max Irwin",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/maxdotio/node-mighty/issues"
+  },
+  "homepage": "https://github.com/maxdotio/node-mighty#readme",
+  "dependencies": {
+    "node-fetch": "^3.2.3"
+  }
+}
