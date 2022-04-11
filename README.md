@@ -71,3 +71,41 @@ const mighty = new Mighty("http://localhost:5050/","question-answering")
 let res = await mighty.get("What is Mighty?  It is a fast NLP server");
 if (!res.err) console.log(res.response.answer);
 ```
+
+## Connection Pooling
+
+It is common to scale Mighty by running it on several ports/cores on one instance.  To make use of all the available Mighty processes on that intance, we provide an easy to use connection pool that will automatically do this.  It keeps a queue of requests and does not block the event loop - suitable for use in async node web servers.
+
+Assuming you have a 4 running Mighty servers on the same host, You can create a pool and send requests easily:
+
+```javascript
+import {MightyPool} from 'node-mighty';
+
+const protocol = "http";
+const host = "192.168.1.20"; //a machine that has 4 mighty servers running
+const ports = [5050,5051,5052,5053]; //the ports that the Mighty servers are using
+const mighty = new MightyPool(protocol,host,ports,"sentence-transformers");
+
+let res = await mighty.get("Hello, Mighty!");
+if (!res.err) console.log(res.response);
+```
+
+A more thorough example is included in examples/connection_pool.js, with the following simulation of 20 requests being handled:
+
+```javascript
+let getter = function(num,mighty){
+	return async function() {
+		let DEBUG = true;
+		let res = await mighty.get("Hello, Mighty!",null,DEBUG);
+		if (!res.err) console.log(`${num} took ${res.response.took}ms`);
+	}
+};
+
+for(var i=0;i<20;i++) {
+	setImmediate(getter(i,mighty));
+};
+
+let res = await mighty.get("Hello, Mighty!");
+if (!res.err) console.log(res.response);
+```
+
