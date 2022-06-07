@@ -1,3 +1,4 @@
+import url from "node:url";
 import { body_request, url_request, get_agent } from "./request.js";
 
 const mighty_url = "http://localhost:5050/";
@@ -46,16 +47,16 @@ const pipelines = {
 ///
 /// Single asyncronous Mighty client
 ///
-export const Mighty = function(url,pipeline) {
-	if (!url) {
+export const Mighty = function(target,pipeline) {
+	if (!target) {
 		console.warn(`Mighty URL not specified, defaulting to ${mighty_url}`);
-		url = mighty_url;
+		target = mighty_url;
 	}
 	if (!pipeline) {
 		console.warn("Mighty pipeline not specified, defaulting to embeddings.");
-		this.url = url;
+		this.url = target;
 	} else if (pipelines[pipeline]) {
-		this.url = url + pipeline;
+		this.url = target + pipeline;
 	} else {
 		throw new Error(`Pipeline "${pipeline}" is not supported.`);
 	}
@@ -80,28 +81,11 @@ Mighty.prototype.is_active = function() {
 ///
 /// Connection Pooling - specify several ports to automatically distribute requests to different servers
 ///
-export const MightyPool = function(protocol,host,ports,pipeline) {
+export const MightyPool = function(urls,pipeline) {
 
-	this.clients = [];
+	const self = this;
 
-	if (!protocol) {
-		console.warn(`Mighty protocol not specified, defaulting to ${mighty_protocol}`);
-		protocol = mighty_host
-	}
-
-	if (!host) {
-		console.warn(`Mighty host not specified, defaulting to ${mighty_host}`);
-		host = mighty_host
-	}
-
-	if (!ports) {
-		console.warn(`Mighty ports not specified, defaulting to [${mighty_port}]`);
-		ports = [mighty_port];
-	} else if ((!isNaN(ports)) && (!(ports instanceof Array))) {
-		ports = [ports];
-	} else if (!(ports instanceof Array)) {
-		ports = [mighty_port];
-	}
+	self.clients = [];
 
 	if (!pipeline) {
 		console.warn("Mighty pipeline not specified, defaulting to embeddings.");
@@ -112,12 +96,17 @@ export const MightyPool = function(protocol,host,ports,pipeline) {
 
 	}
 
-	this.pipeline = pipelines[pipeline];
+	self.pipeline = pipelines[pipeline];
 
-	for (var i=0;i<ports.length;i++) {
-		let url = build_url(protocol,host,ports[i]);
-		let client = new Mighty(url,pipeline);
-		this.clients.push(client);
+	for (var i=0;i<urls.length;i++) {
+		let obj = url.parse(urls[i]);
+
+		if (obj.protocol != 'http:' && obj.protocol != 'https:') {
+			throw new Error(`Invalid url '${urls[i]}'`);
+		}
+
+		let client = new Mighty(obj.href,pipeline);
+		self.clients.push(client);
 	}
 };
 

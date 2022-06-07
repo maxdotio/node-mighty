@@ -1,32 +1,36 @@
 import { MightyPool } from "../index.js";
 
-const protocol = "http";
-const host = "192.168.1.20"; //a machine that has 4 mighty servers running
-const ports = [5050,5051,5052,5053]; //a machine that has 4 mighty servers running
+//192.168.1.17 is a machine that has 4 mighty servers running on ports 5050 through 5053
+const urls = [
+	"http://192.168.1.17:5050",
+	"http://192.168.1.17:5051/",
+	"http://192.168.1.17:5052",
+	"http://192.168.1.17:5053/"
+]
 
 /// sentence-transformers
 function sentence_transformers() {
-	return new MightyPool(protocol,host,ports,"sentence-transformers");
+	return new MightyPool(urls,"sentence-transformers");
 }
 
 /// sequence-classification
 function sequence_classification() {
-	return new MightyPool(protocol,host,ports,"sequence-classification");
+	return new MightyPool(urls,"sequence-classification");
 }
 
 /// token-classication
 function token_classication() {
-	return new MightyPool(protocol,host,ports,"token-classication");
+	return new MightyPool(urls,"token-classication");
 }
 
 /// question-answering
 function question_answering() {
-	return new MightyPool(protocol,host,ports,"question-answering");
+	return new MightyPool(urls,"question-answering");
 }
 
 /// embeddings
 function embeddings() {
-	return new MightyPool(protocol,host,ports,"embeddings");
+	return new MightyPool(urls,"embeddings");
 }
 
 
