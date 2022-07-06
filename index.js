@@ -42,6 +42,7 @@ const pipelines = {
 	"token-classication":get_text,
 	"embeddings":get_text,
 	"question-answering":get_question_answering,
+	"text-visual":get_text
 };
 
 ///
