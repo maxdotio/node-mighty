@@ -1,6 +1,6 @@
 {
   "name": "node-mighty",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Client for Mighty Inference Server",
   "main": "index.js",
   "type": "module",

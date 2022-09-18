@@ -3,7 +3,7 @@ import fetch from "node-fetch";
 
 export function get_agent() {
     return new http.Agent({
-            keepAlive: true
+            keepAlive: false
     });
 };
 
