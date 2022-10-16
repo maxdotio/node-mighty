@@ -57,7 +57,6 @@ export async function url_raw(url,agent){
 
     try {
         let response = null;
-        console.log(url);
         if (agent) {
             response = await fetch(url,{agent:agent});
         } else {
