@@ -1,5 +1,5 @@
 import url from "node:url";
-import { body_request, url_request, get_agent } from "./request.js";
+import { body_request, url_request, url_raw, get_agent } from "./request.js";
 
 const mighty_url = "http://localhost:5050/";
 
@@ -33,7 +33,7 @@ const get_text = async function(url,text,ignored,agent) {
 };
 
 const get_question_answering = async function(url,question,context,agent) {
-	return await url_request(url,{question:question,context:context},'GET',agent);
+	return await url_request(url,{question:question,context:context},agent);
 };
 
 const pipelines = {
@@ -62,6 +62,7 @@ export const Mighty = function(target,pipeline) {
 		throw new Error(`Pipeline "${pipeline}" is not supported.`);
 	}
 	this.pipeline = pipelines[pipeline];
+	this.healthcheck_url = target + 'healthcheck';
 	this.agent = get_agent();
 	this._active = false;
 };
@@ -77,6 +78,15 @@ Mighty.prototype.get = async function(text1,text2) {
 Mighty.prototype.is_active = function() {
 	return this._active;
 };
+
+Mighty.prototype.healthcheck = async function() {
+	let self = this;
+	self._active = true;
+	let response = new MightyResponse(await url_raw(self.healthcheck_url));
+	self._active = false;
+	return response;
+};
+
 
 
 ///
@@ -135,4 +145,10 @@ MightyPool.prototype.get = async function(text1,text2,DEBUG) {
 	const self = this;
 	let connection = await self.wait_for_active_client(DEBUG);
 	return connection.get(text1,text2);
+};
+
+MightyPool.prototype.healthcheck = async function(DEBUG) {
+	const self = this;
+	let connection = await self.wait_for_active_client(DEBUG);
+	return connection.healthcheck();
 };

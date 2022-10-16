@@ -72,9 +72,21 @@ let res = await mighty.get("What is Mighty?  It is a fast NLP server");
 if (!res.err) console.log(res.response.answer);
 ```
 
+### healthcheck
+
+This will ping a mighty connection's healtcheck endpoint and ensure it returns a 200 status code.  It works with any pipeline.
+
+```javascript
+const mighty = new Mighty("http://localhost:5050/","sentence-transformers")
+let res = await mighty.healthcheck();
+if (!res.err) console.log(res.response);
+if (res.err) console.error(res.err);
+```
+
+
 ## Connection Pooling
 
-It is common to scale Mighty by running it on several ports/cores on one instance.  To make use of all the available Mighty processes on that intance, we provide an easy to use connection pool that will automatically do this.  It keeps a queue of requests and does not block the event loop - suitable for use in async node web servers.
+It is common to scale Mighty by running it on several ports/cores on one instance.  To make use of all the available Mighty processes on that instance, we provide an easy to use connection pool that will automatically do this.  It keeps a queue of requests and does not block the event loop - suitable for use in async node web servers.
 
 Assuming you have a 4 running Mighty servers on the same host, You can create a pool and send requests easily:
 

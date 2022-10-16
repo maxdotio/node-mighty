@@ -52,3 +52,20 @@ export async function url_request(url,params,agent){
         return [ex,output];
     }
 }
+
+export async function url_raw(url,agent){
+
+    try {
+        let response = null;
+        console.log(url);
+        if (agent) {
+            response = await fetch(url,{agent:agent});
+        } else {
+            response = await fetch(url);
+        }        
+        return [null,response];
+    } catch(ex) {
+        const output = null;
+        return [ex,output];
+    }
+}

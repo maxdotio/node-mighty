@@ -2,10 +2,10 @@ import { MightyPool } from "../index.js";
 
 //192.168.1.17 is a machine that has 4 mighty servers running on ports 5050 through 5053
 const urls = [
-	"http://192.168.1.17:5050",
-	"http://192.168.1.17:5051/",
-	"http://192.168.1.17:5052",
-	"http://192.168.1.17:5053/"
+	"http://localhost:5050",
+	"http://localhost:5051/",
+	"http://localhost:5052",
+	"http://localhost:5053/"
 ]
 
 /// sentence-transformers
@@ -44,18 +44,30 @@ let getter = function(num,mighty){
 	return async function() {
 		let DEBUG = true;
 		let res = await mighty.get("Hello, Mighty!",null,DEBUG);
-		if (!res.err) console.log(`${num} took ${res.response.took}ms`);
+		if (!res.err) console.log(`${num} inference took ${res.response.took}ms`);
 	}
 };
 
 let asker = function(num,mighty){
 	return async function() {
 		let res = await mighty.get("What is Mighty?  It is a fast NLP server");
-		if (!res.err) console.log(`${num} took ${res.response.took}ms`);
+		if (!res.err) console.log(`${num} asker took ${res.response.took}ms`);
+	}
+};
+
+let healthy = function(num,mighty){
+	return async function() {
+		let DEBUG = true;
+		let start = new Date();
+		let res = await mighty.healthcheck();
+		let end = new Date();
+		if (!res.err) console.log(`${num} healthcheck took ${end-start}ms`);
+		if (res.err) console.log(`${num} healthcheck ERROR ${end-start}ms`);
 	}
 };
 
 for(var i=0;i<20;i++) {
 	setImmediate(getter(i,mighty));
-	//setImmediate(asker(i));
+	//setImmediate(asker(i,mighty));
+	setImmediate(healthy(i,mighty));
 };
