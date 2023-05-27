@@ -36,11 +36,16 @@ const get_question_answering = async function(url,question,context,agent) {
 	return await url_request(url,{question:question,context:context},agent);
 };
 
+const get_cross_encoding = async function(url,text,document,agent) {
+	return await url_request(url,{text:text,document:document},agent);
+};
+
 const pipelines = {
 	"sentence-transformers":get_text,
 	"sequence-classification":get_text,
-	"token-classication":get_text,
+	"token-classification":get_text,
 	"embeddings":get_text,
+	"cross-encoding":get_cross_encoding,
 	"question-answering":get_question_answering,
 	"text-visual":get_text
 };

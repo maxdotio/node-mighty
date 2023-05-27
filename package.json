@@ -1,6 +1,6 @@
 {
   "name": "node-mighty",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Client for Mighty Inference Server",
   "main": "index.js",
   "type": "module",
@@ -12,7 +12,8 @@
     "url": "git+https://github.com/maxdotio/node-mighty.git"
   },
   "keywords": [
-    "nlp",
+    "ai",
+    "nlp,"
     "transformers",
     "onnx",
     "bert"
