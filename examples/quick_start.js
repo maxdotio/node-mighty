@@ -1,14 +1,18 @@
-import { Mighty } from "../index.js";
+const { Mighty,MightyPool } = require("../index.js");
 
 
 //const mighty_url = "http://localhost:5050/";
-const mighty_url = "http://192.168.1.17:5050/";
+const mighty_url = "http://risa:5050/";
 
 /// sentence-transformers
 async function sentence_transformers() {
 	const mighty = new Mighty(mighty_url,"sentence-transformers");
 	let res = await mighty.get("Hello, Mighty!");
 	if (!res.err) console.log(res.response);
+
+	const pool = new MightyPool([mighty_url],"sentence-transformers");
+	res = await pool.get("Hello, Mighty!");
+	if (!res.err) console.log(res.response);	
 }
 
 /// sequence-classification

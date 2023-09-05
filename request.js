@@ -1,70 +1,61 @@
-import http from "http";
-import fetch from "node-fetch";
+const http = require("http");
+const axios = require("axios");
 
-export function get_agent() {
-    return new http.Agent({
-            keepAlive: false
-    });
-};
-
-export async function body_request(url,body,method,agent){
-    method = method || "POST";
-
-    let fetch_spec = {
-        method: method,
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-    };
-
-    //Optional args
-    if (body) fetch_spec.body = JSON.stringify(body);
-    if (agent) fetch_spec.agent = agent;
-
-    try {
-        let response = await fetch(url, fetch_spec);
-        const output = await response.json();
-        return [null,output];
-    } catch(ex) {
-        const output = null;
-        return [ex,output];
-    }
+function get_agent() {
+  return new http.Agent({
+    keepAlive: false,
+  });
 }
 
-
-export async function url_request(url,params,agent){
-
-    if (params) {
-        url += "?" + new URLSearchParams(params).toString();
-    }
-
-    try {
-        if (agent) {
-            let response = await fetch(url,{agent:agent});
-        } else {
-            let response = await fetch(url);
-        }
-        const output = await response.json();
-        return [null,output];
-    } catch(ex) {
-        const output = null;
-        return [ex,output];
-    }
+async function body_request(url, body, method = "POST", agent) {
+  const config = {
+    method,
+    url,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    data: body ? JSON.stringify(body) : null,
+    httpAgent: agent,
+  };
+  try {
+    const { data } = await axios(config);
+    return [null, data];
+  } catch (ex) {
+    return [ex, null];
+  }
 }
 
-export async function url_raw(url,agent){
-
-    try {
-        let response = null;
-        if (agent) {
-            response = await fetch(url,{agent:agent});
-        } else {
-            response = await fetch(url);
-        }        
-        return [null,response];
-    } catch(ex) {
-        const output = null;
-        return [ex,output];
-    }
+async function url_request(url, params, agent) {
+  if (params) {
+    url += "?" + new URLSearchParams(params).toString();
+  }
+  const config = {
+    method: "GET",
+    url,
+    httpAgent: agent,
+  };
+  try {
+    const { data } = await axios(config);
+    return [null, data];
+  } catch (ex) {
+    return [ex, null];
+  }
 }
+
+async function url_raw(url, agent) {
+  const config = {
+    method: "GET",
+    url,
+    responseType: "stream",
+    httpAgent: agent,
+  };
+  try {
+    const response = await axios(config);
+    return [null, response];
+  } catch (ex) {
+    return [ex, null];
+  }
+}
+
+module.exports = { "get_agent":get_agent, "body_request":body_request, "url_request":url_request, "url_raw":url_raw };

@@ -1,5 +1,5 @@
-import url from "node:url";
-import { body_request, url_request, url_raw, get_agent } from "./request.js";
+const url = require("node:url");
+const { get_agent, body_request, url_request, url_raw } = require("./request.js");
 
 const mighty_url = "http://localhost:5050/";
 
@@ -53,7 +53,7 @@ const pipelines = {
 ///
 /// Single asyncronous Mighty client
 ///
-export const Mighty = function(target,pipeline) {
+const Mighty = function(target,pipeline) {
 	if (!target) {
 		console.warn(`Mighty URL not specified, defaulting to ${mighty_url}`);
 		target = mighty_url;
@@ -97,7 +97,7 @@ Mighty.prototype.healthcheck = async function() {
 ///
 /// Connection Pooling - specify several ports to automatically distribute requests to different servers
 ///
-export const MightyPool = function(urls,pipeline) {
+const MightyPool = function(urls,pipeline) {
 
 	const self = this;
 
@@ -157,3 +157,5 @@ MightyPool.prototype.healthcheck = async function(DEBUG) {
 	let connection = await self.wait_for_active_client(DEBUG);
 	return connection.healthcheck();
 };
+
+module.exports = { "Mighty":Mighty, "MightyPool":MightyPool };

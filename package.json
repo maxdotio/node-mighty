@@ -1,9 +1,8 @@
 {
   "name": "node-mighty",
-  "version": "2.2.2",
+  "version": "3.0.0",
   "description": "Client for Mighty Inference Server",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,6 +24,6 @@
   },
   "homepage": "https://github.com/maxdotio/node-mighty#readme",
   "dependencies": {
-    "node-fetch": "^3.2.3"
+    "axios": "^1.5.0"
   }
 }

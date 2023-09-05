@@ -1,11 +1,8 @@
-import { MightyPool } from "../index.js";
+const { MightyPool } =require("../index.js");
 
 //192.168.1.17 is a machine that has 4 mighty servers running on ports 5050 through 5053
 const urls = [
-	"http://localhost:5050",
-	"http://localhost:5051/",
-	"http://localhost:5052",
-	"http://localhost:5053/"
+	"http://risa:5050"
 ]
 
 /// sentence-transformers
@@ -66,7 +63,7 @@ let healthy = function(num,mighty){
 	}
 };
 
-for(var i=0;i<20;i++) {
+for(var i=0;i<50;i++) {
 	setImmediate(getter(i,mighty));
 	//setImmediate(asker(i,mighty));
 	setImmediate(healthy(i,mighty));
